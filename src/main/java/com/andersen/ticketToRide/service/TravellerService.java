@@ -1,5 +1,9 @@
 package com.andersen.ticketToRide.service;
 
-public interface TravellerService {
+import com.andersen.ticketToRide.dto.TravellerDto;
+import com.andersen.ticketToRide.model.Traveller;
 
+public interface TravellerService {
+    void saveTraveller(TravellerDto travellerDto);
+    TravellerDto getTravellerById(long id);
 }
