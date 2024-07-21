@@ -1,37 +1,33 @@
 package com.andersen.ticketToRide.dto;
 
 import com.andersen.ticketToRide.enums.Cities;
-import com.andersen.ticketToRide.model.Traveller;
-import jakarta.validation.constraints.NotEmpty;
+import com.andersen.ticketToRide.model.User;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TicketDto {
 
     private long id;
 
-    @NotEmpty(message = "departure title should not be empty")
     private Cities departure;
 
-    @NotEmpty(message = "arrival title should not be empty")
     private Cities arrival;
 
-    @NotEmpty(message = "segments title should not be empty")
     private int segments;
 
-    @NotEmpty(message = "price title should not be empty")
-    private BigDecimal price;
+    private BigDecimal price = BigDecimal.ZERO;
 
-    @NotEmpty(message = "currency title should not be empty")
-    private String currency;
+    private String currency = "GBP";
 
-    @NotEmpty(message = "traveller_amount title should not be empty")
-    private int traveller_amount;
+    private int travellerAmount;
 
-    @NotEmpty(message = "traveller title should not be empty")
-    private Traveller traveller;
+    private User user;
 }

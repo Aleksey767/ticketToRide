@@ -13,8 +13,8 @@ public class TicketMapper {
                 .segments(ticketDto.getSegments())
                 .price(ticketDto.getPrice())
                 .currency(ticketDto.getCurrency())
-                .traveller_amount(ticketDto.getTraveller_amount())
-                .traveller(ticketDto.getTraveller())
+                .travellerAmount(ticketDto.getTravellerAmount())
+                .user(ticketDto.getUser())
                 .build();
     }
 
@@ -26,8 +26,8 @@ public class TicketMapper {
                 .segments(ticket.getSegments())
                 .price(ticket.getPrice())
                 .currency(ticket.getCurrency())
-                .traveller_amount(ticket.getTraveller_amount())
-                .traveller(ticket.getTraveller())
+                .travellerAmount(ticket.getTravellerAmount())
+                .user(ticket.getUser())
                 .build();
     }
 }

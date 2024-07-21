@@ -1,42 +1,57 @@
 package com.andersen.ticketToRide.controller;
 
 import com.andersen.ticketToRide.dto.TicketDto;
-import com.andersen.ticketToRide.dto.TravellerDto;
-import com.andersen.ticketToRide.mapper.TravellerMapper;
+import com.andersen.ticketToRide.dto.UserDto;
+import com.andersen.ticketToRide.enums.Cities;
+import com.andersen.ticketToRide.mapper.UserMapper;
 import com.andersen.ticketToRide.service.TicketService;
-import com.andersen.ticketToRide.service.TravellerService;
+import com.andersen.ticketToRide.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @Controller
 @AllArgsConstructor
-@ResponseBody
 public class MainController {
 
     private TicketService ticketService;
 
-    private TravellerService travellerService;
+    private UserService userService;
+
+    @GetMapping("/")
+    public String redirectToMain() {
+
+        return "redirect:/main";
+    }
+
+    @GetMapping("/main")
+    public String mainPage(Model model,@RequestParam(value = "selectedCity", required = false) Cities selectedCity) {
+        model.addAttribute("cities", Cities.values());
+        model.addAttribute("selectedCity", selectedCity);
+        return "main";
+    }
+
+    @GetMapping("/{username}")
+    public String userProfile(@PathVariable String username, Model model) {
+        UserDto userDto = userService.getUserByUsername(username);
+        model.addAttribute("tickets", ticketService.getAllTicketsByUser(userDto));
+        return "userPage";
+    }
+
+    @GetMapping("/new_ticket")
+    public String newTicket(Model model) {
+        model.addAttribute("ticketDto", new TicketDto());
+        return "newTicket";
+    }
 
     @PostMapping("/add_ticket")
-    public TicketDto addTicket(@RequestBody TicketDto ticketDto) {
-        long id = ticketDto.getTraveller().getId();
-        ticketDto.setTraveller(TravellerMapper.mapToTraveller(travellerService.getTravellerById(id)));
+    public String addTicket(@ModelAttribute TicketDto ticketDto, Principal principal) {
+        UserDto userDto = userService.getUserByUsername(principal.getName());
+        ticketDto.setUser(UserMapper.mapToUser(userDto));
         ticketService.saveTicket(ticketDto);
-        return ticketDto;
-    }
-
-
-    @PostMapping("/add_traveller")
-    public TravellerDto saveTraveller(@RequestBody TravellerDto travellerDto) {
-        travellerService.saveTraveller(travellerDto);
-        return travellerDto;
-    }
-    @GetMapping("/main")
-    public String mainPage() {
-        return "Hello World!!!";
+        return "redirect:/main";
     }
 }
