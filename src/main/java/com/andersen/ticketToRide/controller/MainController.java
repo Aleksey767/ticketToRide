@@ -6,7 +6,6 @@ import com.andersen.ticketToRide.enums.Cities;
 import com.andersen.ticketToRide.mapper.UserMapper;
 import com.andersen.ticketToRide.service.TicketService;
 import com.andersen.ticketToRide.service.UserService;
-import jakarta.persistence.Persistence;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
