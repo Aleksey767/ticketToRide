@@ -67,14 +67,20 @@
                    aria-label="Sizing example input"
                    aria-describedby="inputGroup-sizing-lg">
         </div>
-        <button class="btn btn-primary w-100" type="submit">Buy ticket</button>
+        <button class="btn btn-primary w-100"
+                th:type="${#authorization.expression('isAuthenticated()') ? 'submit' : 'button'}"
+                th:disabled="${#authorization.expression('isAuthenticated()') ? 'false' : 'true'}">
+            Buy ticket
+        </button>
         <input type="hidden" name="departure" th:value="${selectedDeparture}">
         <input type="hidden" name="arrival" th:value="${selectedArrival}">
     </form>
 </div>
 
 <div class="d-flex justify-content-center container mt-4 ">
-    <a href="/{username}" class="btn btn-primary">GO TO MY ACCOUNT</a>
+    <a th:text="${#authorization.expression('isAuthenticated()') ? 'BACK' : 'LOG IN'}"
+       th:href="${#authorization.expression('isAuthenticated()') ? '/{username}' : '/login'}"
+        class="btn btn-primary"></a>
 </div>
 
 <div class="footer">
