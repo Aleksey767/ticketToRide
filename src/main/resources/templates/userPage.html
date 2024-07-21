@@ -9,7 +9,7 @@
 </head>
 <body>
 <h1>Welcome, <b sec:authentication="principal.username"></b>!</h1>
-<div>Your balance:<b sec:authentication="principal.balance"></b></div>
+<div>Your balance: <b th:text="${balance}"></b></div>
 <div class="container mt-4">
     <a href="/main" class="btn btn-primary">Go to Main Page</a>
 </div>
