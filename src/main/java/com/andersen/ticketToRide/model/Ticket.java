@@ -36,9 +36,9 @@ public class Ticket {
 
     private String currency;
 
-    private int traveller_amount;
+    private int travellerAmount;
 
     @ManyToOne
     @JoinColumn(name = "traveller_id", nullable = false)
-    private Traveller traveller;
+    private User user;
 }
