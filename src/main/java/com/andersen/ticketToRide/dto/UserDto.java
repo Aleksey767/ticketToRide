@@ -21,7 +21,7 @@ public class UserDto {
 
     private Roles role = Roles.USER;
 
-    private BigDecimal balance;
+    private BigDecimal balance = new BigDecimal("100");
 
     private String realName;
 }

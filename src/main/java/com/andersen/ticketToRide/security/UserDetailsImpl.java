@@ -8,7 +8,6 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -17,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
+@Getter
 public class UserDetailsImpl implements UserDetails {
 
     private long id;

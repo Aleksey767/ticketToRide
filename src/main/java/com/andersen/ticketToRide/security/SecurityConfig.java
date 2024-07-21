@@ -19,6 +19,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
+
     @Bean
     public BCryptPasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
@@ -50,6 +52,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-    UserDetailsServiceImpl userDetailsServiceImpl;
 }
