@@ -9,6 +9,8 @@ import com.andersen.ticketToRide.model.User;
 import com.andersen.ticketToRide.repository.TicketRepository;
 import com.andersen.ticketToRide.service.TicketService;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,17 +19,22 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class TicketServiceImpl implements TicketService {
+
+    private static final Logger logger = LoggerFactory.getLogger("my-logger-name");
+
     @Autowired
     private TicketRepository ticketRepository;
 
     @Override
     public void saveTicket(TicketDto ticketDto) {
+        logger.debug("[DEBUG MESSAGE]: Saving ticket");
         Ticket ticket = TicketMapper.mapToTicket(ticketDto);
         ticketRepository.save(ticket);
     }
 
     @Override
     public List<TicketDto> getAllTicketsByUser(UserDto userDto) {
+        logger.debug("[DEBUG MESSAGE]: Get all tickets by user");
         User user = UserMapper.mapToUser(userDto);
         List<Ticket> tickets = ticketRepository.findAllByUser(user);
         return tickets.stream()
