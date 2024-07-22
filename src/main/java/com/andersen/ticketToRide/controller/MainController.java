@@ -21,32 +21,31 @@ import java.security.Principal;
 @AllArgsConstructor
 public class MainController {
 
-    private static final Logger logger = LoggerFactory.getLogger("com.andersen.ticketToRide");
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
 
     private final TicketService ticketService;
-
     private final UserService userService;
 
-    @GetMapping("/")
-    public String redirectToMain() {
-        logger.info("[INFO MESSAGE]: GET request to /");
-        return "redirect:/main";
-    }
-
     @GetMapping("/main")
-    public String showDropdown(Model model, @RequestParam(value = "selectedArrival", required = false) Cities selectedArrival,
-                               @RequestParam(value = "selectedDeparture", required = false) Cities selectedDeparture) {
-        logger.info("[INFO MESSAGE]: GET request to /main");
+    public String buyTicket(Model model, Principal principal,
+                            @RequestParam(value = "selectedArrival", required = false) Cities selectedArrival,
+                            @RequestParam(value = "selectedDeparture", required = false) Cities selectedDeparture) {
+        LOGGER.info("[INFO MESSAGE]: GET request to /main");
+
+        addUserInfoToModel(model, principal);
         model.addAttribute("cities", Cities.values());
         model.addAttribute("selectedArrival", selectedArrival);
         model.addAttribute("selectedDeparture", selectedDeparture);
         return "main";
     }
 
-    @PostMapping("/main")
-    public String selectCity(Model model, @RequestParam(value = "cityDeparture", required = false) Cities cityDeparture,
+    @PostMapping("/api/ticket/select_city")
+    public String selectCity(Model model, Principal principal,
+                             @RequestParam(value = "cityDeparture", required = false) Cities cityDeparture,
                              @RequestParam(value = "cityArrival", required = false) Cities cityArrival) {
-        logger.info("[INFO MESSAGE]: POST request to /main");
+        LOGGER.info("[INFO MESSAGE]: POST request to /api/ticket/select_city");
+
+        addUserInfoToModel(model, principal);
         model.addAttribute("cities", Cities.values());
         model.addAttribute("selectedArrival", cityArrival);
         model.addAttribute("selectedDeparture", cityDeparture);
@@ -54,34 +53,32 @@ public class MainController {
     }
 
     @Transactional
-    @GetMapping("/{username}")
-    public String userProfile(@PathVariable String username, Model model, Principal principal) {
-        logger.info("[INFO MESSAGE]: GET request to /username");
-        UserDto userDto = userService.getUserByUsername(principal.getName());
-        model.addAttribute("tickets", ticketService.getAllTicketsByUser(userDto));
-        model.addAttribute("balance", userDto.getBalance());
-        return "userPage";
-    }
-
-    @Transactional
-    @PostMapping("/add_ticket")
+    @PostMapping("/api/ticket/save_ticket")
     public String addTicket(@ModelAttribute TicketDto ticketDto, Principal principal, Model model) {
-        logger.info("[INFO MESSAGE]: POST request to /add_ticket");
+        LOGGER.info("[INFO MESSAGE]: POST request to /api/ticket/save_ticket");
+
         String username = principal.getName();
+
         if (ticketDto.getDeparture() == null || ticketDto.getArrival() == null || ticketDto.getArrival().equals(ticketDto.getDeparture())) {
             model.addAttribute("errorMessage", "Please choose arrival and departure");
-            model.addAttribute("cities", Cities.values());
             return "main";
         }
+
         UserDto userDto = userService.getUserByUsername(username);
         ticketDto.setUser(UserMapper.mapToUser(userDto));
         ticketService.saveTicket(ticketDto);
 
-        BigDecimal result = userDto.getBalance().subtract(BigDecimal.TEN);// stub!
+        BigDecimal result = userDto.getBalance().subtract(BigDecimal.TEN); // stub!
         userService.updateUserBalance(username, result);
 
         model.addAttribute("successMessage", "Ticket was successfully purchased!");
-        model.addAttribute("cities", Cities.values());
-        return "main";
+        return "redirect:/main";
+    }
+
+    private void addUserInfoToModel(Model model, Principal principal) {
+        if (principal != null) {
+            UserDto userDto = userService.getUserByUsername(principal.getName());
+            model.addAttribute("balance", userDto.getBalance());
+        }
     }
 }
