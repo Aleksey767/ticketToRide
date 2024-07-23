@@ -95,7 +95,7 @@ public class CalculatePrice {
         return null;
     }
 
-    LinkedList<Node> getShortestPath(Node start, Node end, HashMap<Node, Integer> timeToNodes) {
+    LinkedList<Node> dijkstraAlgorithm(Node start, Node end, HashMap<Node, Integer> timeToNodes) {
         LinkedList<Node> path = new LinkedList<>();
         Node node = end;
         while (node != start) {
@@ -128,7 +128,7 @@ public class CalculatePrice {
         if (timesToNodes.get(end) == Integer.MAX_VALUE) {
             return null;
         }
-        return getShortestPath(start, end, timesToNodes);
+        return dijkstraAlgorithm(start, end, timesToNodes);
     }
 
     void calculateTimeToEachNode(HashSet<Node> unprocessedNodes, HashMap<Node, Integer> timeToNodes) {
