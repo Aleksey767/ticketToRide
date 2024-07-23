@@ -13,14 +13,17 @@
 <div class="container mt-4">
     <a href="/main" class="btn btn-primary">Go to Main Page</a>
 </div>
+<form th:action="@{/logout}" method="POST">
+    <input type="submit" value="logout">
+</form>
 
 <table class="table table-striped-columns">
+    <span>My tickets:</span>
     <thead>
     <tr>
         <th scope="col">id</th>
         <th scope="col">Departure</th>
         <th scope="col">Arrival</th>
-        <th scope="col">Segments</th>
         <th scope="col">Price</th>
         <th scope="col">Currency</th>
         <th scope="col">Traveller amount</th>
@@ -32,7 +35,6 @@
         <td th:text = "${ticket.getId()}"></td>
         <td th:text = "${ticket.getDeparture()}"></td>
         <td th:text = "${ticket.getArrival()}"></td>
-        <td th:text = "${ticket.getSegments()}"></td>
         <td th:text = "${ticket.getPrice()}"></td>
         <td th:text = "${ticket.getCurrency()}"></td>
         <td th:text = "${ticket.getTravellerAmount()}"></td>
@@ -41,9 +43,7 @@
 
     </tbody>
 </table>
-<form th:action="@{/logout}" method="POST">
-    <input type="submit" value="logout">
-</form>
+
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

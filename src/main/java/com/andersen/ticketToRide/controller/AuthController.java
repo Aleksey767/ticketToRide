@@ -32,9 +32,9 @@ public class AuthController {
         return "registration";
     }
 
-    @PostMapping("/api/save_user")
-    public String registrationSubmit(@ModelAttribute("user") UserDto userDto, Model model) {
-        LOGGER.info("[INFO MESSAGE]: POST request to /api/save_user");
+    @PostMapping("/api/user/save_user")
+    public String registrationSubmit(@ModelAttribute("user") UserDto userDto) {
+        LOGGER.info("[INFO MESSAGE]: POST request to /api/user/save_user");
         userService.saveUser(userDto);
         return "redirect:/login";
     }
