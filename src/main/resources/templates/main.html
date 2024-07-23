@@ -36,11 +36,11 @@
     <div class="btn-group">
         <button class="btn btn-secondary btn-lg dropdown-toggle custom-margin" type="button" data-bs-toggle="dropdown"
                 aria-expanded="false">
-            <span th:text="${selectedDeparture != null ? selectedDeparture : 'Pick departure'}">Pick departure</span>
+            <span th:text="${selectedDeparture != null ? selectedDeparture : 'Pick departure'}"></span>
         </button>
         <ul class="dropdown-menu">
             <li th:each="city : ${cities}">
-                <form th:action="@{/api/ticket/select_city}" method="post">
+                <form th:action="@{/api/ticket/calculate_price}" method="post">
                     <input type="hidden" name="cityDeparture" th:value="${city}">
                     <input type="hidden" name="cityArrival"
                            th:value="${selectedArrival != null ? selectedArrival : ''}">
@@ -53,11 +53,11 @@
     <div class="btn-group">
         <button class="btn btn-secondary btn-lg dropdown-toggle custom-margin" type="button" data-bs-toggle="dropdown"
                 aria-expanded="false">
-            <span th:text="${selectedArrival != null ? selectedArrival : 'Pick arrival'}">Pick arrival</span>
+            <span th:text="${selectedArrival != null ? selectedArrival : 'Pick arrival'}"></span>
         </button>
         <ul class="dropdown-menu">
             <li th:each="city : ${cities}">
-                <form th:action="@{/api/ticket/select_city}" method="post">
+                <form th:action="@{/api/ticket/calculate_price}" method="post">
                     <input type="hidden" name="cityArrival" th:value="${city}">
                     <input type="hidden" name="cityDeparture"
                            th:value="${selectedDeparture != null ? selectedDeparture : ''}">
@@ -67,7 +67,7 @@
         </ul>
     </div>
 </div>
-
+<div class="centered-text text-center" th:text="${price != null ? price : ''}"></div>
 <div class="d-grid gap-2 col-2 mx-auto">
     <form th:action="@{/api/ticket/save_ticket}" method="POST">
         <div class="input-group mb-3 w-100">

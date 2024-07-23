@@ -3,6 +3,7 @@ package com.andersen.ticketToRide.controller;
 import com.andersen.ticketToRide.dto.TicketDto;
 import com.andersen.ticketToRide.dto.UserDto;
 import com.andersen.ticketToRide.enums.Cities;
+import com.andersen.ticketToRide.graph.CalculatePrice;
 import com.andersen.ticketToRide.mapper.UserMapper;
 import com.andersen.ticketToRide.service.TicketService;
 import com.andersen.ticketToRide.service.UserService;
@@ -24,6 +25,7 @@ public class MainController {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
 
     private final TicketService ticketService;
+
     private final UserService userService;
 
     @GetMapping("/main")
@@ -39,7 +41,7 @@ public class MainController {
         return "main";
     }
 
-    @PostMapping("/api/ticket/select_city")
+    @PostMapping("/api/ticket/calculate_price")
     public String selectCity(Model model, Principal principal,
                              @RequestParam(value = "cityDeparture", required = false) Cities cityDeparture,
                              @RequestParam(value = "cityArrival", required = false) Cities cityArrival) {
@@ -49,6 +51,8 @@ public class MainController {
         model.addAttribute("cities", Cities.values());
         model.addAttribute("selectedArrival", cityArrival);
         model.addAttribute("selectedDeparture", cityDeparture);
+        model.addAttribute("price", calculatePrice(model, cityDeparture, cityArrival));
+        model.addAttribute("price", calculatePrice(model, cityDeparture, cityArrival));
         return "main";
     }
 
@@ -68,8 +72,8 @@ public class MainController {
         ticketDto.setUser(UserMapper.mapToUser(userDto));
         ticketService.saveTicket(ticketDto);
 
-        BigDecimal result = userDto.getBalance().subtract(BigDecimal.TEN); // stub!
-        userService.updateUserBalance(username, result);
+        userService.updateUserBalance(username,
+                userDto.getBalance().subtract(calculatePrice(model, ticketDto.getDeparture(), ticketDto.getArrival())));
 
         model.addAttribute("successMessage", "Ticket was successfully purchased!");
         return "redirect:/main";
@@ -80,5 +84,13 @@ public class MainController {
             UserDto userDto = userService.getUserByUsername(principal.getName());
             model.addAttribute("balance", userDto.getBalance());
         }
+    }
+
+    private BigDecimal calculatePrice(Model model, Cities cityDeparture, Cities cityArrival) {
+        if (cityDeparture != null && cityArrival != null) {
+            CalculatePrice calculatePrice = new CalculatePrice();
+            return new BigDecimal(calculatePrice.startCalculationProcess(cityDeparture, cityArrival));
+        }
+        return null;
     }
 }
