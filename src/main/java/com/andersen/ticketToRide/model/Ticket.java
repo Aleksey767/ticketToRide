@@ -30,8 +30,6 @@ public class Ticket {
     @JdbcType(PostgreSQLEnumJdbcType.class)
     private Cities arrival;
 
-    private int segments;
-
     private BigDecimal price;
 
     private String currency;

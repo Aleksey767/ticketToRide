@@ -21,9 +21,7 @@ public class TicketDto {
 
     private Cities arrival;
 
-    private int segments;
-
-    private BigDecimal price = BigDecimal.ZERO;
+    private BigDecimal price;
 
     private String currency = "GBP";
 
