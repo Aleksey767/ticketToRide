@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @AllArgsConstructor
 @Controller
@@ -33,9 +34,11 @@ public class AuthController {
     }
 
     @PostMapping("/api/user/save_user")
-    public String registrationSubmit(@ModelAttribute("user") UserDto userDto) {
+    public String registrationSubmit(@ModelAttribute("user") UserDto userDto, RedirectAttributes redirectAttributes) {
         LOGGER.info("[INFO MESSAGE]: POST request to /api/user/save_user");
         userService.saveUser(userDto);
+
+        redirectAttributes.addFlashAttribute("successMessage", "A new user was successfully created");
         return "redirect:/login";
     }
 }
