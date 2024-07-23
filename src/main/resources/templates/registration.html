@@ -6,7 +6,7 @@
 </head>
 <body>
 <h1>Заполните форму</h1>
-<form th:action="@{/registration}" th:object="${user}" method="POST">
+<form th:action="@{/api/user/save_user}" th:object="${user}" method="POST">
 
     <label for="name">username:</label>
     <input type="text" th:field="*{username}" id="name"><br><br>
@@ -16,7 +16,6 @@
 
     <label for="realName">realName:</label>
     <input type="text" th:field="*{realName}" id="realName"><br><br>
-
 
     <input type="submit" value="Register"/>
 </form>

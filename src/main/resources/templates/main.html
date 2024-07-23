@@ -11,9 +11,11 @@
             display: flex;
             flex-direction: column;
         }
+
         .footer {
             margin-top: auto;
         }
+
         .custom-margin {
             margin: 15px;
         }
@@ -24,11 +26,11 @@
 <div class="text-end d-flex justify-content-end align-items-center custom-margin">
     <span sec:authorize="isAuthenticated()">
         BALANCE:
-        <span  th:text="${balance}" class="custom-margin"></span>
+        <span th:text="${balance}" class="custom-margin"></span>
     </span>
     <span class="ms-3" sec:authorize="isAuthenticated()">
         NAME:
-        <span  sec:authentication="principal.username" class="custom-margin"></span>
+        <span sec:authentication="principal.username" class="custom-margin"></span>
     </span>
 </div>
 
@@ -41,10 +43,15 @@
         <ul class="dropdown-menu">
             <li th:each="city : ${cities}">
                 <form th:action="@{/api/ticket/calculate_price}" method="post">
+
                     <input type="hidden" name="cityDeparture" th:value="${city}">
                     <input type="hidden" name="cityArrival"
                            th:value="${selectedArrival != null ? selectedArrival : ''}">
+                    <input type="hidden" name="travellerAmount"
+                           th:value="${selectedTravellerAmount != null ? selectedTravellerAmount : ''}">
+
                     <button class="dropdown-item" type="submit" th:text="${city}"></button>
+
                 </form>
             </li>
         </ul>
@@ -57,39 +64,66 @@
         </button>
         <ul class="dropdown-menu">
             <li th:each="city : ${cities}">
+
                 <form th:action="@{/api/ticket/calculate_price}" method="post">
                     <input type="hidden" name="cityArrival" th:value="${city}">
                     <input type="hidden" name="cityDeparture"
                            th:value="${selectedDeparture != null ? selectedDeparture : ''}">
+                    <input type="hidden" name="travellerAmount"
+                           th:value="${selectedTravellerAmount != null ? selectedTravellerAmount : ''}">
+
                     <button class="dropdown-item" type="submit" th:text="${city}"></button>
+
                 </form>
             </li>
         </ul>
     </div>
 </div>
+
+
 <div class="centered-text text-center" th:text="${price != null ? price : ''}"></div>
+
+<div class="btn-group">
+    <button class="btn btn-secondary btn-lg dropdown-toggle custom-margin" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+        <span th:text="${selectedTravellerAmount != null ? selectedTravellerAmount : 'Pick Traveller Amount'}"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li th:each="num : ${#numbers.sequence(1, 10)}">
+            <form th:action="@{/api/ticket/calculate_price}" method="POST">
+
+                <input type="hidden" name="travellerAmount" th:value="${num}">
+                <input type="hidden" name="cityDeparture"
+                       th:value="${selectedDeparture != null ? selectedDeparture : ''}">
+                <input type="hidden" name="cityArrival"
+                       th:value="${selectedArrival != null ? selectedArrival : ''}">
+
+                <button class="dropdown-item" type="submit" th:text="${num}"></button>
+            </form>
+        </li>
+    </ul>
+</div>
+
 <div class="d-grid gap-2 col-2 mx-auto">
     <form th:action="@{/api/ticket/save_ticket}" method="POST">
-        <div class="input-group mb-3 w-100">
-            <span class="input-group-text w-100" id="inputGroup-sizing-lg">Traveller amount</span>
-            <input name="travellerAmount" value="1" min="1" step="1" type="number" class="form-control w-100"
-                   aria-label="Sizing example input"
-                   aria-describedby="inputGroup-sizing-lg">
-        </div>
         <button class="btn btn-primary w-100"
                 th:type="${#authorization.expression('isAuthenticated()') ? 'submit' : 'button'}"
                 th:disabled="${#authorization.expression('isAuthenticated()') ? 'false' : 'true'}">
             Buy ticket
         </button>
+
         <input type="hidden" name="departure" th:value="${selectedDeparture}">
         <input type="hidden" name="arrival" th:value="${selectedArrival}">
+        <input type="hidden" name="travellerAmount" th:value="${selectedTravellerAmount}">
+        <input type="hidden" name="price" th:value="${price}">
+
     </form>
 </div>
 
 <div class="d-flex justify-content-center container mt-4 ">
     <a th:text="${#authorization.expression('isAuthenticated()') ? 'BACK' : 'LOG IN'}"
        th:href="${#authorization.expression('isAuthenticated()') ? '/{username}' : '/login'}"
-        class="btn btn-primary"></a>
+       class="btn btn-primary"></a>
 </div>
 
 <div class="footer">
