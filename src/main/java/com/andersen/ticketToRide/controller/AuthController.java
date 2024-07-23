@@ -15,26 +15,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class AuthController {
 
-    private static final Logger logger = LoggerFactory.getLogger("com.andersen.ticketToRide");
+    private static final Logger LOGGER = LoggerFactory.getLogger("com.andersen.ticketToRide");
 
     UserService userService;
 
     @GetMapping("/login")
     public String myLogin() {
-        logger.info("[INFO MESSAGE]: GET request to /login");
+        LOGGER.info("[INFO MESSAGE]: GET request to /login");
         return "login";
     }
 
     @GetMapping("/registration")
     public String registration(Model model) {
-        logger.info("[INFO MESSAGE]: GET request to /registration");
+        LOGGER.info("[INFO MESSAGE]: GET request to /registration");
         model.addAttribute("user", new UserDto());
         return "registration";
     }
 
-    @PostMapping("/registration")
+    @PostMapping("/api/save_user")
     public String registrationSubmit(@ModelAttribute("user") UserDto userDto, Model model) {
-        logger.info("[INFO MESSAGE]: POST request to /registration");
+        LOGGER.info("[INFO MESSAGE]: POST request to /api/save_user");
         userService.saveUser(userDto);
         return "redirect:/login";
     }

@@ -22,24 +22,24 @@ public class UserServiceImpl implements UserService {
         return new BCryptPasswordEncoder();
     }
 
-    private static final Logger logger = LoggerFactory.getLogger("com.andersen.ticketToRide");
+    private static final Logger LOGGER = LoggerFactory.getLogger("com.andersen.ticketToRide");
 
     @Override
     public void saveUser(UserDto userDto) {
-        logger.debug("[DEBUG MESSAGE]: Saving user");
+        LOGGER.debug("[DEBUG MESSAGE]: Saving user...");
         userDto.setPassword(encoder().encode(userDto.getPassword()));
         userRepository.save(UserMapper.mapToUser(userDto));
     }
 
     @Override
     public UserDto getUserByUsername(String username) {
-        logger.debug("[DEBUG MESSAGE]: Getting user by username");
+        LOGGER.debug("[DEBUG MESSAGE]: Getting user by username...");
         return UserMapper.mapToUserDto(userRepository.findByUsername(username).get());
     }
 
     @Override
     public void updateUserBalance(String username, BigDecimal balance) {
-        logger.debug("[DEBUG MESSAGE]: Updating user balance");
+        LOGGER.debug("[DEBUG MESSAGE]: Updating user balance");
         userRepository.updateBalance(username, balance);
     }
 }
