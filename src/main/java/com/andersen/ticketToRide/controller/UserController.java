@@ -30,6 +30,7 @@ public class UserController {
         LOGGER.info("[INFO MESSAGE]: GET request to /username");
 
         UserDto userDto = userService.getUserByUsername(principal.getName());
+
         model.addAttribute("tickets", ticketService.getAllTicketsByUser(userDto));
         model.addAttribute("balance", userDto.getBalance());
         return "userPage";
