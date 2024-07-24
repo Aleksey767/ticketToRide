@@ -11,6 +11,9 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +39,7 @@ public class MainController {
 
     @GetMapping("/main")
     public String buyTicket(Model model, Principal principal) {
-        LOGGER.info("[INFO MESSAGE]: GET request to /main");
+        LOGGER.info("GET request to /main");
 
         getUserInfo(model, principal);
         model.addAttribute("cities", Cities.values());
@@ -44,12 +47,36 @@ public class MainController {
         return "main";
     }
 
+    @GetMapping("/redirect_invalid_data")
+    public String invalidData(RedirectAttributes redirectAttributes) {
+        LOGGER.info("GET request to /redirect_invalid_data");
+
+        redirectAttributes.addFlashAttribute("errorMessage", "You should pick arrival,departure and traveller amount");
+        return "redirect:/main";
+    }
+
+    @GetMapping("/redirect_lack_of_money")
+    public String lackOfMoney(RedirectAttributes redirectAttributes) {
+        LOGGER.info("GET request to /redirect_lack_of_money");
+
+        redirectAttributes.addFlashAttribute("errorMessage", "You don't have enough money");
+        return "redirect:/main";
+    }
+
+    @GetMapping("/redirect_success")
+    public String success(RedirectAttributes redirectAttributes) {
+        LOGGER.info("GET request to /redirect_success");
+
+        redirectAttributes.addFlashAttribute("successMessage", "Ticket was successfully purchased");
+        return "redirect:/main";
+    }
+
     @PostMapping("/api/ticket/calculate_price")
     public String selectCity(Model model, Principal principal,
                              @RequestParam(value = "cityDeparture", required = false) Cities cityDeparture,
                              @RequestParam(value = "cityArrival", required = false) Cities cityArrival,
                              @RequestParam(value = "travellerAmount", required = false) BigDecimal travellerAmount) {
-        LOGGER.info("[INFO MESSAGE]: POST request to /api/ticket/calculate_price");
+        LOGGER.info("POST request to /api/ticket/calculate_price");
 
         getUserInfo(model, principal);
         model.addAttribute("selectedArrival", cityArrival);
@@ -65,28 +92,30 @@ public class MainController {
 
     @Transactional
     @PostMapping("/api/ticket/save_ticket")
-    public String addTicket(@ModelAttribute TicketDto ticketDto, Principal principal, RedirectAttributes redirectAttributes) {
-        LOGGER.info("[INFO MESSAGE]: POST request to /api/ticket/save_ticket");
+    public ResponseEntity<?> addTicket(@ModelAttribute TicketDto ticketDto, Principal principal) {
+        LOGGER.info("POST request to /api/ticket/save_ticket");
 
         String username = principal.getName();
+        HttpHeaders headers = new HttpHeaders();
 
         if (ticketDto.getDeparture() == null || ticketDto.getArrival() == null || ticketDto.getArrival().equals(ticketDto.getDeparture())) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Please choose arrival and departure");
-            return "redirect:/main";
+            headers.add("X-Redirect", "invalid_data");
+            return new ResponseEntity<>(ticketDto, headers, HttpStatus.CREATED);
         }
 
         UserDto userDto = userService.getUserByUsername(username);
         if (userDto.getBalance().compareTo(ticketDto.getPrice()) < 0) {
-            redirectAttributes.addFlashAttribute("errorMessage", "You don't have enough money");
-            return "redirect:/main";
+            headers.add("X-Redirect", "lack_of_money");
+            return new ResponseEntity<>(ticketDto, headers, HttpStatus.CREATED);
         }
+
         userService.updateUserBalance(username, userDto.getBalance().subtract(ticketDto.getPrice()));
 
         ticketDto.setUser(UserMapper.mapToUser(userDto));
         ticketService.saveTicket(ticketDto);
 
-        redirectAttributes.addFlashAttribute("successMessage", "Ticket was successfully purchased!");
-        return "redirect:/main";
+        headers.add("X-Redirect", "success");
+        return new ResponseEntity<>(ticketDto, headers, HttpStatus.CREATED);
     }
 
     private void getUserInfo(Model model, Principal principal) {

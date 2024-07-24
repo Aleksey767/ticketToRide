@@ -39,7 +39,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/success_after_creating_user","/registration","/js/**","/main","/api/ticket/calculate_price","/api/user/save_user").permitAll()
+                        .requestMatchers("/success_after_creating_user","redirect_invalid_data","/redirect_lack_of_money",
+                                "/success_after_creating_user","/registration","/js/**","/main","/api/ticket/calculate_price","/api/user/save_user").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")

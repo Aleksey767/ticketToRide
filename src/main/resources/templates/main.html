@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Buy Ticket</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" th:src="@{/js/add-ticket-handler.js}"></script>
 </head>
 <body class="d-flex flex-column min-vh-100 justify-content-center">
 
@@ -93,7 +94,7 @@
                                                th:text="${price != null ? price + ' GBT' : ''}"></h1></div>
     <div class="row justify-content-center mt-3">
         <div class="col-md-6">
-            <form th:action="@{/api/ticket/save_ticket}" method="POST">
+            <form id="save_ticket-form" th:action="@{/api/ticket/save_ticket}" method="POST">
                 <button class="btn btn-success w-100"
                         th:type="${#authorization.expression('isAuthenticated()') ? 'submit' : 'button'}"
                         th:disabled="${#authorization.expression('isAuthenticated()') ? 'false' : 'true'}">
