@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void saveUser(UserDto userDto) {
         LOGGER.debug("[DEBUG MESSAGE]: Saving user...");
+
         userDto.setPassword(encoder().encode(userDto.getPassword()));
         userRepository.save(UserMapper.mapToUser(userDto));
     }
@@ -34,12 +35,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserByUsername(String username) {
         LOGGER.debug("[DEBUG MESSAGE]: Getting user by username...");
+
         return UserMapper.mapToUserDto(userRepository.findByUsername(username).get());
     }
 
     @Override
     public void updateUserBalance(String username, BigDecimal balance) {
         LOGGER.debug("[DEBUG MESSAGE]: Updating user balance");
+
         userRepository.updateBalance(username, balance);
     }
 }

@@ -20,9 +20,8 @@ import java.util.List;
 @AllArgsConstructor
 public class TicketServiceImpl implements TicketService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("my-logger-name");
+    private static final Logger LOGGER = LoggerFactory.getLogger("com.andersen.ticketToRide");
 
-    @Autowired
     private TicketRepository ticketRepository;
 
     @Override
