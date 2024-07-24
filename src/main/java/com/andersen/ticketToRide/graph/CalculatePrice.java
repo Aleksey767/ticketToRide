@@ -8,6 +8,10 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
 
+/**
+ * The {@code CalculatePrice} class provides methods for calculating the shortest path
+ * between cities and determining the price of travel based on the number of segments.
+ */
 @Getter
 public class CalculatePrice {
 
@@ -43,6 +47,13 @@ public class CalculatePrice {
 
     HashMap<Integer, Node> graph = createGraph(graphData);
 
+    /**
+     * Starts the calculation process to determine the travel price between two cities.
+     *
+     * @param departure the city of departure
+     * @param arrival the city of arrival
+     * @return the calculated price of travel
+     */
     public int startCalculationProcess(Cities departure, Cities arrival) {
 
         Node startNode = graph.get(citiesMap.get(departure));
@@ -54,6 +65,12 @@ public class CalculatePrice {
         return calculatePrice(segments);
     }
 
+    /**
+     * Calculates the price based on the number of segments.
+     *
+     * @param segmentAmount the number of segments
+     * @return the calculated price
+     */
     public int calculatePrice(int segmentAmount) {
         int price = 0;
 
@@ -72,6 +89,12 @@ public class CalculatePrice {
         return price;
     }
 
+    /**
+     * Calculates the sum of weights of the edges in the shortest path.
+     *
+     * @param shortestPath the shortest path
+     * @return the sum of weights
+     */
     public int calculateSumOfWeight(LinkedList<Node> shortestPath) {
         int sum = 0;
 
@@ -86,6 +109,13 @@ public class CalculatePrice {
         return sum;
     }
 
+    /**
+     * Finds the edge between two nodes.
+     *
+     * @param from the starting node
+     * @param to the ending node
+     * @return the edge between the nodes, or null if no edge exists
+     */
     private Edge findEdgeBetweenNodes(Node from, Node to) {
         for (Edge edge : from.edges) {
             if (edge.adjacentNode.equals(to)) {
@@ -95,6 +125,14 @@ public class CalculatePrice {
         return null;
     }
 
+    /**
+     * Uses Dijkstra's algorithm to find the shortest path between two nodes.
+     *
+     * @param start the starting node
+     * @param end the ending node
+     * @param timeToNodes a map of nodes and their times
+     * @return the shortest path as a linked list of nodes
+     */
     LinkedList<Node> dijkstraAlgorithm(Node start, Node end, HashMap<Node, Integer> timeToNodes) {
         LinkedList<Node> path = new LinkedList<>();
         Node node = end;
@@ -120,6 +158,14 @@ public class CalculatePrice {
         return path;
     }
 
+    /**
+     * Gets the shortest path between two nodes in the graph.
+     *
+     * @param graph the graph as a map of nodes
+     * @param start the starting node
+     * @param end the ending node
+     * @return the shortest path as a linked list of nodes, or null if no path exists
+     */
     LinkedList<Node> getShortestPath(HashMap<Integer, Node> graph, Node start, Node end) {
         HashSet<Node> unprocessedNodes = new HashSet<>();
         HashMap<Node, Integer> timesToNodes = new HashMap<>();
@@ -131,6 +177,12 @@ public class CalculatePrice {
         return dijkstraAlgorithm(start, end, timesToNodes);
     }
 
+    /**
+     * Calculates the time to each node in the graph.
+     *
+     * @param unprocessedNodes the set of unprocessed nodes
+     * @param timeToNodes the map of nodes and their times
+     */
     void calculateTimeToEachNode(HashSet<Node> unprocessedNodes, HashMap<Node, Integer> timeToNodes) {
         while (!unprocessedNodes.isEmpty()) {
             Node node = getNodeWithMinTimeToIt(unprocessedNodes, timeToNodes);
@@ -150,6 +202,13 @@ public class CalculatePrice {
         }
     }
 
+    /**
+     * Gets the node with the minimum time to it.
+     *
+     * @param unprocessedNodes the set of unprocessed nodes
+     * @param timeToNodes the map of nodes and their times
+     * @return the node with the minimum time to it
+     */
     Node getNodeWithMinTimeToIt(HashSet<Node> unprocessedNodes, HashMap<Node, Integer> timeToNodes) {
         Node nodeWithMinTimeToIt = null;
         int minTime = Integer.MAX_VALUE;
@@ -163,6 +222,14 @@ public class CalculatePrice {
         return nodeWithMinTimeToIt;
     }
 
+    /**
+     * Initializes hash tables for the Dijkstra algorithm.
+     *
+     * @param start the starting node
+     * @param graph the graph as a map of nodes
+     * @param unprocessedNodes the set of unprocessed nodes
+     * @param timesToNodes the map of nodes and their times
+     */
     void initHashTables(Node start, HashMap<Integer, Node> graph,
                         HashSet<Node> unprocessedNodes,
                         HashMap<Node, Integer> timesToNodes) {
@@ -174,6 +241,12 @@ public class CalculatePrice {
         }
     }
 
+    /**
+     * Creates a graph from the provided data.
+     *
+     * @param graphData the data representing the graph
+     * @return a map of nodes representing the graph
+     */
     HashMap<Integer, Node> createGraph(int[][] graphData) {
         HashMap<Integer, Node> graph = new HashMap<>();
         for (int[] row : graphData) {
@@ -190,6 +263,13 @@ public class CalculatePrice {
         return graph;
     }
 
+    /**
+     * Adds a node to the graph or retrieves it if it already exists.
+     *
+     * @param graph the graph as a map of nodes
+     * @param value the value of the node
+     * @return the added or retrieved node
+     */
     public Node addOrGetNode(HashMap<Integer, Node> graph, Integer value) {
         if (value == -1) {
             return null;
