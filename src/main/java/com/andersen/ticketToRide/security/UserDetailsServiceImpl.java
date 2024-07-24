@@ -2,7 +2,6 @@ package com.andersen.ticketToRide.security;
 
 import com.andersen.ticketToRide.model.User;
 import com.andersen.ticketToRide.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
