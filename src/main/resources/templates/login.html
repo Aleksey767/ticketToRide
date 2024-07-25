@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,14 +8,16 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body class="d-flex justify-content-center align-items-center vh-100">
-
 <div class="container" style="max-width: 400px;">
+    <!-- Login Form -->
     <form action="/login" method="post" class="mb-3">
         <div class="form-group mb-3">
-            <input name="username" type="text" class="form-control" id="exampleInputEmail1" placeholder="Enter username">
+            <input name="username" type="text" class="form-control" id="exampleInputEmail1"
+                   placeholder="Enter username">
         </div>
         <div class="form-group mb-3">
-            <input name="password" type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            <input name="password" type="password" class="form-control" id="exampleInputPassword1"
+                   placeholder="Password">
         </div>
         <input type="hidden" name="_csrf" value="{{_csrf.token}}"/>
         <div class="d-grid">
@@ -23,11 +25,12 @@
             <small id="emailHelp" class="form-text text-muted">No login needed to calculate ticket price</small>
         </div>
     </form>
-
+    <!-- Buttons -->
     <div class="d-grid gap-2">
         <a href="/registration" class="btn btn-success" role="button">Create New Account</a>
         <a href="/main" class="btn btn-warning" role="button">Calculate ticket price</a>
     </div>
+    <!-- Messages -->
     <div th:if="${successMessage}" class="alert alert-success d-grid gap-2 mt-3" role="alert">
         <span th:text="${successMessage}"></span>
     </div>
