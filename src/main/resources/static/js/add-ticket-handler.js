@@ -1,8 +1,25 @@
-document.addEventListener('DOMContentLoaded', function() {
+function updateButtonState() {
+    const priceField = document.getElementById('saved-price');
+    const button = document.getElementById('buy-button');
+    const userAuthenticated = document.getElementById('user-authenticated');
+
+    if (!userAuthenticated) {
+        button.disabled = true;
+        return;
+    }
+
+    button.disabled = !priceField.value.trim();
+}
+
+window.onload = () => {
+    updateButtonState();
+}
+
+document.addEventListener('DOMContentLoaded', function () {
     const dropdownItems = document.querySelectorAll('.dropdown-item');
 
     dropdownItems.forEach(item => {
-        item.addEventListener('click', function(event) {
+        item.addEventListener('click', function (event) {
             event.preventDefault();
             const value = this.getAttribute('data-city');
             const inputId = this.getAttribute('data-input');
@@ -14,13 +31,20 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-const calculatePriceForm = document.getElementById('calculate-price-form');
-if (calculatePriceForm) {
-    calculatePriceForm.addEventListener('submit', function(event) {
-        event.preventDefault();
+function areFieldsValid() {
+    const departure = document.getElementById('departure').value.trim();
+    const arrival = document.getElementById('arrival').value.trim();
+    const travellerAmount = document.getElementById('travellerAmount').value.trim();
+    return departure !== '' && arrival !== '' && travellerAmount !== '';
+}
 
-        const formData = new FormData(calculatePriceForm);
-        fetch(calculatePriceForm.action, {
+document.getElementById('calculate-price-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    if (areFieldsValid()) {
+        const formData = new FormData(this);
+
+        fetch(this.action, {
             method: 'POST',
             body: formData,
             headers: {
@@ -46,11 +70,14 @@ if (calculatePriceForm) {
                 document.getElementById('selected-arrival').value = data.arrival;
                 document.getElementById('selected-travellerAmount').value = data.travellerAmount;
                 document.getElementById('saved-price').value = data.price;
+                updateButtonState();
             }).catch(error => {
-            console.error('Error:', error);
-        });
-    });
-}
+                console.error('Error:', error);
+            });
+    } else {
+        console.log('Form fields are invalid or empty.');
+    }
+});
 
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('save_ticket-form');
@@ -83,8 +110,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             break;
                     }
                     window.location.href = redirectUrl;
-                } else {
-                    throw new Error('Network response is not ok.');
                 }
             }).catch(error => {
                 console.error('Error:', error);
