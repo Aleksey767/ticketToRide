@@ -6,7 +6,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 
@@ -24,7 +23,6 @@ public class UserDetailsImpl implements UserDetails {
     private long id;
     private String username;
     private String password;
-    private BigDecimal balance;
     private Collection<? extends GrantedAuthority> authorities;
 
     /**
@@ -39,7 +37,6 @@ public class UserDetailsImpl implements UserDetails {
                 user.getId(),
                 user.getUsername(),
                 user.getPassword(),
-                user.getBalance(),
                 authorityList);
     }
 
