@@ -5,7 +5,6 @@ import com.andersen.ticketToRide.dto.UserDto;
 import com.andersen.ticketToRide.enums.Cities;
 import com.andersen.ticketToRide.graph.CalculatePrice;
 import com.andersen.ticketToRide.mapper.UserMapper;
-import com.andersen.ticketToRide.model.Ticket;
 import com.andersen.ticketToRide.service.TicketService;
 import com.andersen.ticketToRide.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,8 +17,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -40,7 +37,7 @@ public class TicketController {
     public ResponseEntity<?> calculatePrice(@RequestParam String departure, @RequestParam String arrival, @RequestParam String travellerAmount) {
         LOGGER.info("POST request to /api/ticket/calculate_price");
 
-        if (departure != null && arrival != null && travellerAmount != null) {
+        if (!departure.isEmpty() && !arrival.isEmpty() && !travellerAmount.isEmpty()) {
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode jsonObject = mapper.createObjectNode();
             jsonObject.put("departure", departure);

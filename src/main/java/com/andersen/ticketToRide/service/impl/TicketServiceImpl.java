@@ -36,7 +36,7 @@ public class TicketServiceImpl implements TicketService {
      */
     @Override
     public void saveTicket(TicketDto ticketDto) {
-        LOGGER.debug("[DEBUG MESSAGE]: Saving ticket...");
+        LOGGER.debug("Saving ticket...");
         Ticket ticket = TicketMapper.mapToTicket(ticketDto);
         ticketRepository.save(ticket);
     }
@@ -51,7 +51,7 @@ public class TicketServiceImpl implements TicketService {
      */
     @Override
     public List<TicketDto> getAllTicketsByUser(UserDto userDto) {
-        LOGGER.debug("[DEBUG MESSAGE]: Getting all tickets by user...");
+        LOGGER.debug("Getting all tickets by user...");
         User user = UserMapper.mapToUser(userDto);
         List<Ticket> tickets = ticketRepository.findAllByUser(user);
         return tickets.stream()

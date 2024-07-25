@@ -31,7 +31,6 @@ public class MainController {
         LOGGER.info("GET request to /main");
 
         getUserInfo(model, principal);
-        model.addAttribute("ticketDto",new TicketDto());
         model.addAttribute("cities", Cities.values());
         model.addAttribute("numbers", IntStream.rangeClosed(1, 10).mapToObj(BigDecimal::valueOf).collect(Collectors.toList()));
         return "main";

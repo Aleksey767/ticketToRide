@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto getUserByUsername(String username) {
-        LOGGER.debug("[DEBUG MESSAGE]: Getting user by username...");
+        LOGGER.debug("Getting user by username...");
 
         return UserMapper.mapToUserDto(userRepository.findByUsername(username).get());
     }
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void updateUserBalance(String username, BigDecimal balance) {
-        LOGGER.debug("[DEBUG MESSAGE]: Updating user balance");
+        LOGGER.debug("Updating user balance");
 
         userRepository.updateBalance(username, balance);
     }
