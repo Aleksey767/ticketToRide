@@ -31,6 +31,8 @@ public class TicketController {
 
     private final UserService userService;
 
+    private final UserMapper userMapper;
+
     private final TicketService ticketService;
 
     @PostMapping("/api/ticket/calculate_price")
@@ -79,7 +81,7 @@ public class TicketController {
 
         userService.updateUserBalance(username, userDto.getBalance().subtract(ticketDto.getPrice()));
 
-        ticketDto.setUser(UserMapper.mapToUser(userDto));
+        ticketDto.setUser(userMapper.toUser(userDto));
         ticketService.saveTicket(ticketDto);
 
         headers.add("X-Redirect", "success");

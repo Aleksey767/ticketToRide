@@ -1,13 +1,12 @@
+const button = document.getElementById('buy-button');
 function updateButtonState() {
     const priceField = document.getElementById('saved-price');
-    const button = document.getElementById('buy-button');
     const userAuthenticated = document.getElementById('user-authenticated');
-
-    if (!userAuthenticated) {
+    console.log(userAuthenticated)
+    if (userAuthenticated.value === 'false') {
         button.disabled = true;
         return;
     }
-
     button.disabled = !priceField.value.trim();
 }
 
@@ -27,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             document.getElementById(inputId).value = value;
             dropdownButton.textContent = value;
+            button.disabled=true;
         });
     });
 });

@@ -2,30 +2,11 @@ package com.andersen.ticketToRide.mapper;
 
 import com.andersen.ticketToRide.dto.TicketDto;
 import com.andersen.ticketToRide.model.Ticket;
+import org.mapstruct.Mapper;
 
-public class TicketMapper {
+@Mapper(componentModel = "spring")
+public interface TicketMapper {
 
-    public static Ticket mapToTicket(TicketDto ticketDto) {
-        return Ticket.builder()
-                .id(ticketDto.getId())
-                .departure(ticketDto.getDeparture())
-                .arrival(ticketDto.getArrival())
-                .price(ticketDto.getPrice())
-                .currency(ticketDto.getCurrency())
-                .travellerAmount(ticketDto.getTravellerAmount())
-                .user(ticketDto.getUser())
-                .build();
-    }
-
-    public static TicketDto mapToTicketDto(Ticket ticket) {
-        return TicketDto.builder()
-                .id(ticket.getId())
-                .departure(ticket.getDeparture())
-                .arrival(ticket.getArrival())
-                .price(ticket.getPrice())
-                .currency(ticket.getCurrency())
-                .travellerAmount(ticket.getTravellerAmount())
-                .user(ticket.getUser())
-                .build();
-    }
+    TicketDto toTicketDto(Ticket ticket);
+    Ticket toTicket(TicketDto ticketDto);
 }

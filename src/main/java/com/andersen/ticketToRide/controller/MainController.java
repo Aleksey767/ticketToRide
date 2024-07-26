@@ -1,6 +1,5 @@
 package com.andersen.ticketToRide.controller;
 
-import com.andersen.ticketToRide.dto.TicketDto;
 import com.andersen.ticketToRide.dto.UserDto;
 import com.andersen.ticketToRide.enums.Cities;
 import com.andersen.ticketToRide.service.UserService;
