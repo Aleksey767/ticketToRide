@@ -25,6 +25,8 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("com.andersen.ticketToRide");
 
+    private final UserMapper userMapper;
+
     /**
      * Provides a {@link BCryptPasswordEncoder} instance used for encoding passwords.
      *
@@ -43,10 +45,10 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void saveUser(UserDto userDto) {
-        LOGGER.debug("[DEBUG MESSAGE]: Saving user...");
+        LOGGER.debug("Saving user...");
 
         userDto.setPassword(encoder().encode(userDto.getPassword()));
-        userRepository.save(UserMapper.mapToUser(userDto));
+        userRepository.save(userMapper.toUser(userDto));
     }
 
     /**
@@ -61,7 +63,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUserByUsername(String username) {
         LOGGER.debug("Getting user by username...");
 
-        return UserMapper.mapToUserDto(userRepository.findByUsername(username).get());
+        return userMapper.toUserDto(userRepository.findByUsername(username).get());
     }
 
     /**

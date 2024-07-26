@@ -98,7 +98,7 @@
                 <input type="hidden" name="travellerAmount" id="selected-travellerAmount">
                 <input type="hidden" name="price" id="saved-price">
                 <input type="hidden" id="user-authenticated"
-                       value="${#authorization.expression('isAuthenticated()') ? 'true' : 'false'}">
+                       th:value="${#authorization.expression('isAuthenticated()') ? 'true' : 'false'}">
                 <button id="buy-button" class="btn btn-success w-100" type="submit">Buy ticket</button>
                 <small th:text="${#authorization.expression('isAuthenticated()') ? 'You must calculate price' : 'You must be authorised to purchase a ticket'}"
                        id="emailHelp" class="form-text text-muted"></small>

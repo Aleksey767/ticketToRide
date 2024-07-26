@@ -5,12 +5,18 @@ import com.andersen.ticketToRide.enums.Cities;
 import com.andersen.ticketToRide.model.Ticket;
 import com.andersen.ticketToRide.model.User;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
 class TicketMapperTest {
+
+    @Autowired
+    private TicketMapper ticketMapper;
 
     @Test
     void mapToTicket_shouldConvertDtoToModel() {
@@ -25,7 +31,7 @@ class TicketMapperTest {
                 .user(new User())
                 .build();
 
-        Ticket ticket = TicketMapper.mapToTicket(ticketDto);
+        Ticket ticket = ticketMapper.toTicket(ticketDto);
 
         assertEquals(ticketDto.getId(), ticket.getId());
         assertEquals(ticketDto.getDeparture(), ticket.getDeparture());
@@ -49,7 +55,7 @@ class TicketMapperTest {
                 .user(new User())
                 .build();
 
-        TicketDto ticketDto = TicketMapper.mapToTicketDto(ticket);
+        TicketDto ticketDto = ticketMapper.toTicketDto(ticket);
 
         assertEquals(ticket.getId(), ticketDto.getId());
         assertEquals(ticket.getDeparture(), ticketDto.getDeparture());

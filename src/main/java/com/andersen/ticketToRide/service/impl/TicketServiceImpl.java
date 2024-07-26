@@ -28,6 +28,9 @@ public class TicketServiceImpl implements TicketService {
 
     private final TicketRepository ticketRepository;
 
+    private final TicketMapper ticketMapper;
+    private final UserMapper userMapper;
+
     /**
      * Saves a ticket to the repository.
      * This method maps the {@link TicketDto} to a {@link Ticket} entity and then persists it using the repository.
@@ -37,7 +40,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public void saveTicket(TicketDto ticketDto) {
         LOGGER.debug("Saving ticket...");
-        Ticket ticket = TicketMapper.mapToTicket(ticketDto);
+        Ticket ticket = ticketMapper.toTicket(ticketDto);
         ticketRepository.save(ticket);
     }
 
@@ -52,10 +55,10 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public List<TicketDto> getAllTicketsByUser(UserDto userDto) {
         LOGGER.debug("Getting all tickets by user...");
-        User user = UserMapper.mapToUser(userDto);
+        User user = userMapper.toUser(userDto);
         List<Ticket> tickets = ticketRepository.findAllByUser(user);
         return tickets.stream()
-                .map(TicketMapper::mapToTicketDto)
+                .map(ticketMapper::toTicketDto)
                 .toList();
     }
 }

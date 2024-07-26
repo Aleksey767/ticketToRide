@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -26,6 +24,12 @@ class TicketServiceImplTest {
 
     @Mock
     private TicketRepository ticketRepository;
+
+    @Mock
+    private TicketMapper ticketMapper;
+
+    @Mock
+    private UserMapper userMapper;
 
     @InjectMocks
     private TicketServiceImpl ticketService;
@@ -45,45 +49,37 @@ class TicketServiceImplTest {
 
     @Test
     void saveTicket_shouldCallRepository() {
-        try (MockedStatic<TicketMapper> mockedStatic = Mockito.mockStatic(TicketMapper.class)) {
-            mockedStatic.when(() -> TicketMapper.mapToTicket(ticketDto)).thenReturn(ticket);
+        when(ticketMapper.toTicket(ticketDto)).thenReturn(ticket);
 
-            ticketService.saveTicket(ticketDto);
+        ticketService.saveTicket(ticketDto);
 
-            verify(ticketRepository).save(ticket);
-        }
+        verify(ticketRepository).save(ticket);
     }
 
     @Test
     void getAllTicketsByUser_shouldCallRepository() {
-        try (MockedStatic<UserMapper> mockedStaticUser = Mockito.mockStatic(UserMapper.class)) {
-            mockedStaticUser.when(() -> UserMapper.mapToUser(userDto)).thenReturn(user);
+        when(userMapper.toUser(userDto)).thenReturn(user);
 
-            ticketService.getAllTicketsByUser(userDto);
+        ticketService.getAllTicketsByUser(userDto);
 
-            verify(ticketRepository).findAllByUser(user);
-        }
+        verify(ticketRepository).findAllByUser(user);
     }
 
     @Test
     void getAllTicketsByUser_shouldReturnTicketsList() {
-        try (MockedStatic<UserMapper> mockedStaticUser = Mockito.mockStatic(UserMapper.class);
-             MockedStatic<TicketMapper> mockedStaticTicket = Mockito.mockStatic(TicketMapper.class)) {
+        when(userMapper.toUser(userDto)).thenReturn(user);
 
-            mockedStaticUser.when(() -> UserMapper.mapToUser(userDto)).thenReturn(user);
+        List<Ticket> tickets = List.of(ticket);
+        when(ticketRepository.findAllByUser(user)).thenReturn(tickets);
 
-            List<Ticket> tickets = List.of(ticket);
-            when(ticketRepository.findAllByUser(user)).thenReturn(tickets);
+        TicketDto ticketDto = new TicketDto();
+        when(ticketMapper.toTicketDto(ticket)).thenReturn(ticketDto);
 
-            TicketDto ticketDto = new TicketDto();
-            mockedStaticTicket.when(() -> TicketMapper.mapToTicketDto(ticket)).thenReturn(ticketDto);
+        List<TicketDto> ticketsDto = ticketService.getAllTicketsByUser(userDto);
 
-            List<TicketDto> ticketsDto = ticketService.getAllTicketsByUser(userDto);
+        assertEquals(1, ticketsDto.size());
+        assertEquals(ticketDto, ticketsDto.get(0));
 
-            assertEquals(1, ticketsDto.size());
-            assertEquals(ticketDto, ticketsDto.getFirst());
-
-            verify(ticketRepository).findAllByUser(user);
-        }
+        verify(ticketRepository).findAllByUser(user);
     }
 }
