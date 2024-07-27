@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     throw new Error('Network response is not ok.');
                 }
             }).then(data => {
-                window.location.href = '/success_after_creating_user';
+                window.location.href = '/api/v1/user/success_after_creating_user';
             })
                 .catch(error => {
                     console.error('Error:', error);

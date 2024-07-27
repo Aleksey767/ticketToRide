@@ -37,11 +37,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/success_after_creating_user","redirect_invalid_data","/redirect_lack_of_money",
-                                "/success_after_creating_user","/registration","/js/**","/main","/api/ticket/calculate_price","/api/user/save_user").permitAll()
+                        .requestMatchers(
+                                "/api/v1/user/success_after_creating_user","/api/v1/tickets/redirect", "/auth/registration" ,
+                                "/js/**","/api/v1/tickets","/api/v1/tickets/calculation","/api/v1/user/creating").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form
-                        .loginPage("/login")
+                        .loginPage("/auth/login")
                         .successHandler(customAuthenticationSuccessHandler)
                         .permitAll()
                 )
