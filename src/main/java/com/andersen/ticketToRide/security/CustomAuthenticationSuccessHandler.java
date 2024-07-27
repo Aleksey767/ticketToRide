@@ -28,6 +28,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String username = authentication.getName();
-        response.sendRedirect("/" + username);
+        response.sendRedirect("/api/v1/user/" + username);
     }
 }

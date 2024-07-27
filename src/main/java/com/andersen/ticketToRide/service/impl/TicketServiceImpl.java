@@ -2,18 +2,35 @@ package com.andersen.ticketToRide.service.impl;
 
 import com.andersen.ticketToRide.dto.TicketDto;
 import com.andersen.ticketToRide.dto.UserDto;
+import com.andersen.ticketToRide.enums.Cities;
+import com.andersen.ticketToRide.graph.CalculatePrice;
 import com.andersen.ticketToRide.mapper.TicketMapper;
 import com.andersen.ticketToRide.mapper.UserMapper;
 import com.andersen.ticketToRide.model.Ticket;
 import com.andersen.ticketToRide.model.User;
 import com.andersen.ticketToRide.repository.TicketRepository;
+import com.andersen.ticketToRide.repository.UserRepository;
 import com.andersen.ticketToRide.service.TicketService;
+import com.andersen.ticketToRide.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Implementation of the {@link TicketService} interface that handles operations related to tickets.
@@ -29,7 +46,77 @@ public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
 
     private final TicketMapper ticketMapper;
+
     private final UserMapper userMapper;
+
+    private final UserRepository userRepository;
+
+    @Transactional
+    @Override
+    public ResponseEntity<?> addNewTicket(TicketDto ticketDto, Principal principal) {
+
+        String username = principal.getName();
+        HttpHeaders headers = new HttpHeaders();
+
+        if (ticketDto.getArrival().equals(ticketDto.getDeparture())) {
+            headers.add("X-Redirect", "invalid_data");
+            return new ResponseEntity<>(ticketDto, headers, HttpStatus.CREATED);
+        }
+
+        Optional<User> user = userRepository.findByUsername(username);
+        UserDto userDto = user.map(userMapper::toUserDto).orElse(null);
+
+        assert userDto != null;
+
+        if (userDto.getBalance().compareTo(ticketDto.getPrice()) < 0) {
+            headers.add("X-Redirect", "out_of_money");
+            return new ResponseEntity<>(ticketDto, headers, HttpStatus.CREATED);
+        }
+
+        userRepository.updateBalance(username, userDto.getBalance().subtract(ticketDto.getPrice()));
+
+        ticketDto.setUser(userMapper.toUser(userDto));
+        saveTicket(ticketDto);
+
+        headers.add("X-Redirect", "success");
+        return new ResponseEntity<>(ticketDto, headers, HttpStatus.CREATED);
+    }
+
+    private BigDecimal callDijkstraAlgorithm(Cities cityDeparture, Cities cityArrival) {
+        CalculatePrice calculatePrice = new CalculatePrice();
+        return new BigDecimal(calculatePrice.startCalculationProcess(cityDeparture, cityArrival));
+    }
+
+    @Override
+    public ResponseEntity<?> calculateTicketPrice(Cities departure, Cities arrival, int travellerAmount) {
+
+        if (departure != null && arrival != null && travellerAmount != 0) {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode jsonObject = mapper.createObjectNode();
+            jsonObject.put("departure", departure.toString());
+            jsonObject.put("arrival", arrival.toString());
+            jsonObject.put("travellerAmount", travellerAmount);
+            jsonObject.put("price", callDijkstraAlgorithm(departure, arrival).multiply(BigDecimal.valueOf(travellerAmount)));
+            return ResponseEntity.ok().body(jsonObject);
+        } else return (ResponseEntity<?>) ResponseEntity.badRequest();
+    }
+
+    @Override
+    public void redirectAfterCalculating(String status, RedirectAttributes redirectAttributes) {
+        if (status.equals("invalid_data")) {
+            redirectAttributes.addFlashAttribute("errorMessage", "You should pick arrival,departure and traveller amount");
+        } else if (status.equals("out_of_money")) {
+            redirectAttributes.addFlashAttribute("errorMessage", "You don't have enough money");
+        } else {
+            redirectAttributes.addFlashAttribute("successMessage", "Ticket was successfully purchased");
+        }
+    }
+
+    @Override
+    public void getTicketInfo(Model model, Principal principal) {
+        model.addAttribute("cities", Cities.values());
+        model.addAttribute("numbers", IntStream.rangeClosed(1, 10).mapToObj(BigDecimal::valueOf).collect(Collectors.toList()));
+    }
 
     /**
      * Saves a ticket to the repository.

@@ -22,7 +22,7 @@
         </div>
     </div>
     <!-- Drop down lists -->
-    <form action="/api/ticket/calculate_price" method="post" id="calculate-price-form">
+    <form action="/api/v1/tickets/calculation" method="post" id="calculate-price-form">
         <div class="row justify-content-center mt-4">
             <div class="dropdown col-md-6">
                 <div class="btn-group w-100">
@@ -92,7 +92,7 @@
     <!-- Save Ticket Form -->
     <div class="row justify-content-center mt-3">
         <div class="col-md-6">
-            <form id="save_ticket-form" th:action="@{/api/ticket/save_ticket}" method="POST">
+            <form id="save_ticket-form" th:action="@{/api/v1/tickets/saving}" method="POST">
                 <input type="hidden" name="departure" id="selected-departure">
                 <input type="hidden" name="arrival" id="selected-arrival">
                 <input type="hidden" name="travellerAmount" id="selected-travellerAmount">
@@ -108,7 +108,7 @@
     <div class="row justify-content-center mt-4">
         <div class="col-md-6">
             <a th:text="${#authorization.expression('isAuthenticated()') ? 'BACK' : 'LOG IN'}"
-               th:href="${#authorization.expression('isAuthenticated()') ? '/{username}' : '/login'}"
+               th:href="${#authorization.expression('isAuthenticated()') ? '/api/v1/user/{username}' : '/auth/login'}"
                class="btn btn-primary w-100"></a>
         </div>
     </div>

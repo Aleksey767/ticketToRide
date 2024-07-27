@@ -2,7 +2,6 @@ const button = document.getElementById('buy-button');
 function updateButtonState() {
     const priceField = document.getElementById('saved-price');
     const userAuthenticated = document.getElementById('user-authenticated');
-    console.log(userAuthenticated)
     if (userAuthenticated.value === 'false') {
         button.disabled = true;
         return;
@@ -84,26 +83,34 @@ document.addEventListener('DOMContentLoaded', function () {
     if (form) {
         form.addEventListener('submit', function (event) {
             event.preventDefault();
+
             const formData = new FormData(form);
+            const jsonData = {};
+
+            formData.forEach((value, key) => {
+                jsonData[key] = value;
+            });
+
             fetch(form.action, {
                 method: 'POST',
-                body: formData,
+                body: JSON.stringify(jsonData),
                 headers: {
-                    'Accept': 'application/json'
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 }
             }).then(response => {
                 if (response.ok) {
                     const redirectHeader = response.headers.get('X-Redirect');
-                    let redirectUrl = '/main';
+                    let redirectUrl = '/api/v1/tickets';
                     switch (redirectHeader) {
                         case 'invalid_data':
-                            redirectUrl = '/redirect_to_main?status=invalid_data';
+                            redirectUrl = '/api/v1/tickets/redirect?status=invalid_data';
                             break;
                         case 'out_of_money':
-                            redirectUrl = '/redirect_to_main?status=out_of_money';
+                            redirectUrl = '/api/v1/tickets/redirect?status=out_of_money';
                             break;
                         case 'success':
-                            redirectUrl = '/redirect_to_main?status=success';
+                            redirectUrl = '/api/v1/tickets/redirect?status=success';
                             break;
                         default:
                             console.warn('Unknown redirect header:', redirectHeader);

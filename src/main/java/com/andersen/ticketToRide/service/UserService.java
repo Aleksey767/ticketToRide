@@ -1,8 +1,10 @@
 package com.andersen.ticketToRide.service;
 
 import com.andersen.ticketToRide.dto.UserDto;
+import org.springframework.ui.Model;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 
 /**
  * The {@code UserService} interface provides methods to manage user information in the ticket-to-ride application.
@@ -10,13 +12,13 @@ import java.math.BigDecimal;
  */
 public interface UserService {
 
+    void getUserInfo(Model model, Principal principal);
     /**
      * Saves a new user to the system.
      *
      * @param userDto a {@link UserDto} object containing the user details to be saved
      */
     void saveUser(UserDto userDto);
-
     /**
      * Retrieves a user by their username.
      *
@@ -24,7 +26,6 @@ public interface UserService {
      * @return a {@link UserDto} object containing the user details
      */
     UserDto getUserByUsername(String username);
-
     /**
      * Updates the balance of a user identified by their username.
      *
