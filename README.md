@@ -4,9 +4,24 @@
 
 _This project implements a shortest path finder between two railway stations using Dijkstra's algorithm. The time complexity of the algorithm is O(n^2), where n is the number of stations. The railway stations are represented in a 2D array, which is used to construct a graph for the algorithm.  The system efficiently computes the minimum travel distance between any two stations on the network, providing a practical tool for route optimization in railway systems._
 
-## Interface
+## How to use
 
-https://ibb.co/album/ZzpCGj
+- Make sure you have Docker-compose and Docker
+- Run docker-compose file
+- Wait for the end of the download
+- Go to the http://localhost:8080
+
+```
+docker --version
+docker-compose --version
+docker-compose up --build
+```
+
+Also you can use my [docker image](https://hub.docker.com/layers/aleksey767/ticket-to-ride/v2/images/sha256-e1a4775c55c4a18678fc3b389429698b144e0497d09109a8aef777d3ac3d81ff?context=repo) in DockerHub:
+
+## Deploy
+ 
+[Railway.app](https://tickettoride-production.up.railway.app/auth/login)
 
 ## Stack
 
@@ -34,7 +49,7 @@ https://ibb.co/album/ZzpCGj
 
 ## API 
 
-- URL: /api/user/save_user
+- URL: /api/v1/user/saving
 - Method: POST
 - Content-Type: application/json
 - Type: public
@@ -51,7 +66,7 @@ https://ibb.co/album/ZzpCGj
   "role": "USER"
 }
 ```
-- URL: /api/ticket/save_ticket
+- URL: /api/v1/tickets/saving
 - Method: POST
 - Content-Type: application/json
 - Type: private
@@ -78,7 +93,7 @@ https://ibb.co/album/ZzpCGj
 
 ```
 
-- URL: /api/ticket/calculate_price
+- URL: /api/v1/tickets/calculating
 - Method: POST
 - Content-Type: application/json
 - Type: public
