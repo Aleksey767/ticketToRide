@@ -6,6 +6,7 @@
     <file>${LOG}</file>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</Pattern>
             <charset>UTF-8</charset>
@@ -20,6 +21,7 @@
             <totalSizeCap>0</totalSizeCap>
             <maxHistory>7</maxHistory>
         </rollingPolicy>
+
     </appender>
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -36,4 +38,5 @@
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </root>
+
 </configuration>
