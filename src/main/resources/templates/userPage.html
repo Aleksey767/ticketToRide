@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Main</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
+<!-- User info -->
+<div class="text-center mb-3">
+    <div class="lead">
+        BALANCE: <b th:text="${balance}"></b>
+        USERNAME: <b sec:authentication="principal.username"></b>
+    </div>
+</div>
+<!-- Buttons -->
+<div class="text-center mb-3">
+    <form th:action="@{/logout}" method="POST">
+        <a href="/api/v1/tickets" class="btn btn-warning w-100 mt-3">Buy new ticket</a>
+        <button class="btn btn-danger w-100 mt-3" type="submit" role="button">Logout</button>
+    </form>
+</div>
+<!-- Ticket List -->
+<div class="display-5 mt-4">My tickets:</div>
+<div class="container text-center">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">Departure</th>
+            <th scope="col">Arrival</th>
+            <th scope="col">Price</th>
+            <th scope="col">Currency</th>
+            <th scope="col">Traveller amount</th>
+            <th scope="col">Holder</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ticket: ${tickets}">
+            <td th:text="${ticket.getId()}"></td>
+            <td th:text="${ticket.getDeparture()}"></td>
+            <td th:text="${ticket.getArrival()}"></td>
+            <td th:text="${ticket.getPrice()}"></td>
+            <td th:text="${ticket.getCurrency()}"></td>
+            <td th:text="${ticket.getTravellerAmount()}"></td>
+            <td th:text="${ticket.getUser().getRealName()}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

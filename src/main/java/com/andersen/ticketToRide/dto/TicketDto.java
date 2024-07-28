@@ -1,37 +1,36 @@
 package com.andersen.ticketToRide.dto;
 
 import com.andersen.ticketToRide.enums.Cities;
-import com.andersen.ticketToRide.model.Traveller;
-import jakarta.validation.constraints.NotEmpty;
-import lombok.Builder;
-import lombok.Data;
+import com.andersen.ticketToRide.model.User;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+import org.springframework.context.annotation.Bean;
 
 import java.math.BigDecimal;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
 public class TicketDto {
 
     private long id;
 
-    @NotEmpty(message = "departure title should not be empty")
+    @NotNull(message = "departure field should be present")
     private Cities departure;
 
-    @NotEmpty(message = "arrival title should not be empty")
+    @NotNull(message = "arrival field should be present")
     private Cities arrival;
 
-    @NotEmpty(message = "segments title should not be empty")
-    private int segments;
-
-    @NotEmpty(message = "price title should not be empty")
+    @NotNull(message = "price field should be present")
     private BigDecimal price;
 
-    @NotEmpty(message = "currency title should not be empty")
-    private String currency;
+    @Builder.Default
+    private String currency = "GBP";
 
-    @NotEmpty(message = "traveller_amount title should not be empty")
-    private int traveller_amount;
+    @NotNull(message = "travellerAmount field should be present")
+    private int travellerAmount;
 
-    @NotEmpty(message = "traveller title should not be empty")
-    private Traveller traveller;
+    private User user;
 }

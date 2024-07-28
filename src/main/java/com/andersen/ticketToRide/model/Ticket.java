@@ -30,15 +30,13 @@ public class Ticket {
     @JdbcType(PostgreSQLEnumJdbcType.class)
     private Cities arrival;
 
-    private int segments;
-
     private BigDecimal price;
 
     private String currency;
 
-    private int traveller_amount;
+    private int travellerAmount;
 
     @ManyToOne
     @JoinColumn(name = "traveller_id", nullable = false)
-    private Traveller traveller;
+    private User user;
 }
