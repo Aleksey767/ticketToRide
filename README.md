@@ -20,8 +20,6 @@ docker-compose up --build
 Also you can use my [docker image](https://hub.docker.com/layers/aleksey767/ticket-to-ride/v2/images/sha256-e1a4775c55c4a18678fc3b389429698b144e0497d09109a8aef777d3ac3d81ff?context=repo) in DockerHub:
 
 ## Deploy
- 
-[Railway.app](https://tickettoride-production.up.railway.app/auth/login)
 
 [Koyeb.app](https://single-blondelle-test-student-207ffc1e.koyeb.app/auth/login?logout)
 
